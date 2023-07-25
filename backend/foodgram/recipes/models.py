@@ -17,7 +17,7 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         'Tag',
-        through='Recipe_tag',
+        through='TagRecipe',
         related_name='tags'
     )
     author = models.ForeignKey(
@@ -28,7 +28,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         'Ingredient',
-        through='RecipeIngredient',
+        through='IngredientRecipe',
         verbose_name='Ингредиенты'
     )
     time_cook = models.PositiveIntegerField(
