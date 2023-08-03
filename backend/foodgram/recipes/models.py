@@ -43,6 +43,17 @@ class Recipe(models.Model):
         auto_now_add=True,
     )
 
+    def __str__(self):
+        '''
+        Для правильного отображения в админке
+        '''
+        return self.name
+    
+    class Meta:
+        ordering = ('-date_add',)
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+
 
 class Ingredient(models.Model):
     '''
@@ -55,14 +66,15 @@ class Ingredient(models.Model):
         max_length=140,
     )
 
+    def __str__(self):
+        '''
+        Для правильного отображения в админке
+        '''
+        return self.name
+    
     class Meta:
         verbose_name = 'Ингредиент'
-        constraints = [
-            UniqueConstraint(
-                fields=('name', 'measurement_unit'),
-                name='unique_constraint_ingredient_name_unit'
-            )
-        ]
+        verbose_name_plural = 'Ингредиенты'
 
 
 class Tag(models.Model):
@@ -74,9 +86,15 @@ class Tag(models.Model):
     name = models.CharField('Название тега', unique=True, max_length=140)
     color = models.CharField('HEX', unique=True, max_length=7)
 
+    def __str__(self):
+        '''
+        Для правильного отображения в админке
+        '''
+        return self.name
+    
     class Meta:
-
         verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
 
 class Favorite(models.Model):
@@ -84,16 +102,16 @@ class Favorite(models.Model):
     Избранное
     '''
 
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name='Юзер',
-        related_name='favorite',
-    )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
+        related_name='favorite',
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name='Юзер',
         related_name='favorite',
     )
 
