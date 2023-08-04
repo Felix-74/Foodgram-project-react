@@ -19,7 +19,10 @@ class CreateTestData:
     def __init__(self) -> None:
         self.user_model = get_user_model()
 
-    def __call__(self, *args: Any, **kwds: Any):
+    def __call__(self, *args, **kwds):
+        '''
+        Возможность вызывать класс как функцию
+        '''
         if check := self.check_db():
             self.create_test_user()
             self.create_admin()
@@ -27,6 +30,9 @@ class CreateTestData:
         return check
 
     def check_db(self):
+        '''
+        Проверка на наличие записей в бд
+        '''
         usr = len(User.objects.all())
         rec = len(Recipe.objects.all())
         if usr == 0 and rec == 0:
@@ -34,6 +40,9 @@ class CreateTestData:
         return False
 
     def create_admin(self):
+        '''
+        Создание администратора
+        '''
         creacte_admin = self.user_model.objects.create_user(
             username='admin',
             last_name='admin',
@@ -46,6 +55,9 @@ class CreateTestData:
         creacte_admin.save()
 
     def create_test_user(self):
+        '''
+        Создание обычных пользователей
+        '''
         for obj in DATA_USER:
             user = self.user_model.objects.create_user(
                 username=obj[0],
@@ -57,7 +69,9 @@ class CreateTestData:
             user.save()
 
     def create_test_recipes(self):
-
+        '''
+        Создание рандомных тестовых рецептов
+        '''
         for num in range(1, 60):
             recipe = Recipe.objects.create(
                     author_id=randint(1, 3),
