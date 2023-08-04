@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -59,8 +60,8 @@ class FavoriteAPIView(APIView):
 
     def post(self, request, id):
         serializer = FavoriteSerializer(
-                data=dict(user=request.user.id, recipe=id),
-                context=dict(request=request)
+            data=dict(user=request.user.id, recipe=id),
+            context=dict(request=request)
         )
         if serializer.is_valid():
             serializer.save()
@@ -69,7 +70,7 @@ class FavoriteAPIView(APIView):
         return Response(
             dict(errors='Рецепт уже в избранном'),
             status=status.HTTP_400_BAD_REQUEST
-            )
+        )
 
 
 class IngredientViewSet(ModelViewSet):
@@ -93,10 +94,9 @@ class ShopCartAPIView(APIView):
 
     def post(self, request, id):
         serializer = ShopCartSerializer(
-                data=dict(
-                    user=request.user.id,
+                data=dict(user=request.user.id,
                     recipe=id
-                ),
+                    ),
                 context=dict(request=request)
         )
         if serializer.is_valid():
