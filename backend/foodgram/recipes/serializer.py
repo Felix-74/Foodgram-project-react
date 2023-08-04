@@ -1,20 +1,21 @@
 import datetime
 
 from djoser.serializers import UserSerializer as DjoserUserSerializer
+
+from drf_extra_fields.fields import Base64ImageField
+from rest_framework.validators import ValidationError
 from rest_framework.serializers import (ModelSerializer,
                                         SerializerMethodField,
                                         ReadOnlyField,
                                         IntegerField,
                                         PrimaryKeyRelatedField)
+
+from utils.method_serializer import SerializerMethods
+from users.models import User
 from recipes.models import (Tag, Ingredient, Recipe,
                             IngredientRecipe, TagRecipe,
                             Favorite, ShopCart)
-from utils.method_serializer import SerializerMethods
-from users.models import User
 
-
-from drf_extra_fields.fields import Base64ImageField
-from rest_framework.validators import ValidationError
 
 class IngredientRecipeSerializer(ModelSerializer):
     '''
@@ -30,6 +31,7 @@ class IngredientRecipeSerializer(ModelSerializer):
     class Meta:
         model = IngredientRecipe
         fields = ('id', 'amount', 'measurement_unit', 'name')
+
 
 class TagsSerializer(ModelSerializer):
     '''
@@ -49,6 +51,7 @@ class IngredientsSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('id', 'measurement_unit', 'name')
+
 
 class AuthorSerializer(DjoserUserSerializer):
     '''
@@ -75,11 +78,11 @@ class AuthorSerializer(DjoserUserSerializer):
         '''
         return SerializerMethods().check_is_subscribed(self.context, obj)
 
+
 class RecipeSerializer(ModelSerializer):
     '''
     Сериализатор рецепта
     '''
-
 
     ingredients = SerializerMethodField()
     is_favorited = SerializerMethodField()
@@ -91,9 +94,7 @@ class RecipeSerializer(ModelSerializer):
     class Meta:
         model = Recipe
         fields = '__all__'
-        #exclude = ('time_cook',)
         read_only_fields = ('author',)
-
 
     def get_ingredients(self, obj):
         return IngredientRecipeSerializer(
@@ -101,10 +102,8 @@ class RecipeSerializer(ModelSerializer):
             many=True
         ).data
 
-
     def get_is_in_shopping_cart(self, obj):
         return SerializerMethods().check_in_shopping_cart(self.context, obj)
-
 
     def get_is_favorited(self, obj):
         return SerializerMethods().check_is_favorited(self.context, obj)
@@ -114,7 +113,7 @@ class CreateIngredientRecipe(ModelSerializer):
     '''
     Добавление ингредиента в рецепт
     '''
-    
+
     id = IntegerField()
     amount = IntegerField()
 
@@ -130,16 +129,14 @@ class CreateRecipeSerializer(ModelSerializer):
 
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     image = Base64ImageField()
-    author = DjoserUserSerializer(read_only=True) #UserSerializer(read_only=True)
+    author = DjoserUserSerializer(read_only=True)
     ingredients = CreateIngredientRecipe(many=True)
     cooking_time = IntegerField(source='time_cook')
-
 
     class Meta:
         model = Recipe
         fields = ('name',
                   'cooking_time',
-                  #'time_cook',
                   'text',
                   'tags',
                   'author',
@@ -189,7 +186,7 @@ class CreateRecipeSerializer(ModelSerializer):
             data,
             context=dict(request=self.context.get('request'))
         ).data
-        
+
 
 class ShowFavoriteSerializer(ModelSerializer):
     '''
@@ -201,8 +198,8 @@ class ShowFavoriteSerializer(ModelSerializer):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'cooking_time', 'image')
-        
-        
+
+
 class FavoriteSerializer(ModelSerializer):
     '''
     Избранное
@@ -213,10 +210,12 @@ class FavoriteSerializer(ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        if Favorite.objects.filter(user_id=data['user'], recipe__id=data['recipe'].id).exists():
+        if Favorite.objects.filter(
+                user_id=data['user'],
+                recipe__id=data['recipe'].id
+                ).exists():
             raise ValidationError("Уже есть такая подписка!")
         return data
-
 
     def to_representation(self, data):
         return ShowFavoriteSerializer(
@@ -235,19 +234,23 @@ class ShopCartSerializer(ModelSerializer):
         fields = ('user', 'recipe')
 
     def validate(self, data):
-        if ShopCart.objects.filter(user_id=data['user'], recipe_id=data['recipe'].id).exists():
+        if ShopCart.objects.filter(
+                user_id=data['user'],
+                recipe_id=data['recipe'].id
+                ).exists():
             raise ValidationError("Предмет уже добавлен!!")
         return data
 
     def to_representation(self, data):
-        
+
         return ShowFavoriteSerializer(
             data.recipe,
             context=dict(request=self.context.get('request'))
         ).data
 
+
 class RecipesSubsSerializer(RecipeSerializer):
-    
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')

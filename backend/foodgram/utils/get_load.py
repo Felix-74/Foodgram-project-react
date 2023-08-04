@@ -1,5 +1,6 @@
 from recipes.models import IngredientRecipe
 
+
 def dowload_ingredients(request):
     '''
     Собираем ингредиенты из покупок

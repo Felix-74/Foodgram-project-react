@@ -13,11 +13,12 @@ class User(AbstractUser):
     username = models.CharField('username', max_length=254)
     last_name = models.CharField('Фамилия', max_length=254, blank=False)
     first_name = models.CharField('Имя', max_length=254, blank=False)
-    email = models.EmailField('E-mail', max_length=254, unique=True, blank=False)
+    email = models.EmailField('E-mail', max_length=254, unique=True,
+                              blank=False)
 
     REQUIRED_FIELDS = ('username', 'last_name', 'first_name')
     USERNAME_FIELD = 'email'
-    
+
     def __str__(self):
         return self.username
 
@@ -42,7 +43,7 @@ class Subscription(models.Model):
 
     def __str__(self):
         return f'{self.user} + {self.author}'
-    
+
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'

@@ -1,13 +1,6 @@
-#from recipes.models import Ingredient
 import json
-from typing import Any, Optional
 from recipes.models import Ingredient, Tag
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-import os
-from rest_framework.response import Response
+
 
 TAG_DATA = (
     ('Завтрак', '#CD5C5C', 'breakfast'),
@@ -40,6 +33,3 @@ def load_to_db():
         resp_.update(dict(ingredient_load='Ингредиенты загружены!'))
     else:
         resp_.update(dict(ingredient_load='Ингредиенты не загружены!'))
-    print(resp_)
-
-

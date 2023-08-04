@@ -1,6 +1,7 @@
 from recipes.models import Favorite, ShopCart
 from users.models import Subscription
-from recipes.models import Tag, Ingredient, Recipe, IngredientRecipe, TagRecipe
+from recipes.models import (Ingredient, IngredientRecipe,
+                            TagRecipe)
 
 
 class SerializerMethods:
@@ -26,7 +27,6 @@ class SerializerMethods:
         if context.get('request', False):
             return False
         return True
-    
 
     def check_is_favorited(self, context, obj):
         if self.check_is_user(context):
@@ -34,7 +34,6 @@ class SerializerMethods:
                 user=context['request'].user, recipe_id=obj.id
             ).exists()
         return False
-
 
     def check_is_subscribed(self, context, obj):
         if self.check_is_user(context):
@@ -54,7 +53,7 @@ class SerializerMethods:
         IngredientRecipe.objects.bulk_create(
             [
                 IngredientRecipe(
-                    ingredient = Ingredient.objects.get(
+                    ingredient=Ingredient.objects.get(
                         id=obj_ingredient.get('id')
                     ),
                     recipe=recipe,
@@ -63,9 +62,7 @@ class SerializerMethods:
             ]
         )
 
-    
     def add_tags(self, tags, recipe):
-        #for tag in tags:
         TagRecipe.objects.bulk_create(
             [
                 TagRecipe(
@@ -74,4 +71,3 @@ class SerializerMethods:
                 ) for tag in tags
             ]
         )
-        #TagRecipe.objects.create(recipe=recipe, tag=tag)

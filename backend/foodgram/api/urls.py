@@ -1,9 +1,10 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from recipes.views import TagViewSet, RecipeViewSet, FavoriteAPIView, ShopCartAPIView, IngredientViewSet, DownloadFilesAPIView, MyTest
-#from users.urls import urlpatterns as user_url
+
 from users.views import CheckSubscribeAPIView, SubscribeAPIView
-from utils.load_ingredient import load_to_db
+from recipes.views import (TagViewSet, RecipeViewSet,
+                           FavoriteAPIView, ShopCartAPIView,
+                           IngredientViewSet, DownloadFilesAPIView)
 
 default_urls = DefaultRouter()
 
@@ -37,5 +38,3 @@ urlpatterns = [
     path('', include(default_urls.urls)),
     path('', include('djoser.urls')),
 ]
-
-#urlpatterns += user_url

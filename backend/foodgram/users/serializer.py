@@ -1,6 +1,7 @@
 from rest_framework.serializers import SerializerMethodField
 from users.models import User, Subscription
-from djoser.serializers import UserCreateSerializer, UserSerializer as DjoserUserSerializer
+from djoser.serializers import (UserCreateSerializer,
+                                UserSerializer as DjoserUserSerializer)
 from utils.method_serializer import SerializerMethods
 from rest_framework.serializers import ModelSerializer
 from rest_framework.validators import UniqueTogetherValidator
@@ -10,6 +11,7 @@ from rest_framework.serializers import ValidationError
 
 
 USER_AUTHOR_FIELDS = ('user', 'author')
+
 
 class UserSerializer(DjoserUserSerializer):
     '''
@@ -55,7 +57,6 @@ class UserRegSerializer(UserCreateSerializer):
         )
 
 
-
 class CheckSubscribeSerializer(ModelSerializer):
     '''
     Просмотр подписок юзера
@@ -67,7 +68,6 @@ class CheckSubscribeSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        #fields = '__all__'
         fields = [
             'id',
             'email',
@@ -78,7 +78,7 @@ class CheckSubscribeSerializer(ModelSerializer):
             'recipes',
             'recipes_count'
         ]
-    
+
     def check_user(self, data):
         user = data['request'].user
         if not user:
@@ -91,29 +91,23 @@ class CheckSubscribeSerializer(ModelSerializer):
                 user=user, author=obj).exists()
         return False
 
-
     def get_recipes(self, obj):
         request = self.context.get('request')
         data = Recipe.objects.filter(author=obj)
         return ShowFavoriteSerializer(
-            SerializerMethods.paginator(request, data),
+            SerializerMethods().paginator(request, data),
             many=True,
             context=dict(request=request)
             ).data
 
-
     def get_recipes_count(self, obj):
         return len(Recipe.objects.filter(author=obj))
-
-
 
 
 class SubscribeSerializer(ModelSerializer):
     '''
     Подписки
     '''
-    
-
 
     class Meta:
         model = Subscription
@@ -131,7 +125,6 @@ class SubscribeSerializer(ModelSerializer):
             print(data)
             return data
         raise ValidationError(dict(error='Нельзя подписаться на самого себя'))
-    
 
     def to_representation(self, data):
         return CheckSubscribeSerializer(

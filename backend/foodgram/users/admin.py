@@ -4,7 +4,6 @@ from users.models import User, Subscription
 from django.contrib.auth.models import Group
 
 
-
 class UserAdmin(ModelAdmin):
 
     search_fields = ('username', 'email')
@@ -19,7 +18,6 @@ class UserAdmin(ModelAdmin):
         obj.save()
 
 
-
 class SubscriptionAdmin(ModelAdmin):
     list_filter = ('author__username', 'user__username')
     list_display = ('user', 'author')
@@ -28,7 +26,6 @@ class SubscriptionAdmin(ModelAdmin):
         'author__email',
 
     )
-
 
 
 class TagAdmin(ModelAdmin):
@@ -51,6 +48,7 @@ class RecipeAdmin(ModelAdmin):
         Количество добавлений в избранное рецепта
         '''
         return len(Favorite.objects.filter(recipe=obj))
+
 
 site.unregister(Group)
 site.register(Recipe, RecipeAdmin)

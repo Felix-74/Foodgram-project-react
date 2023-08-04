@@ -48,7 +48,7 @@ class Recipe(models.Model):
         Для правильного отображения в админке
         '''
         return self.name
-    
+
     class Meta:
         ordering = ('-date_add',)
         verbose_name = 'Рецепт'
@@ -71,7 +71,7 @@ class Ingredient(models.Model):
         Для правильного отображения в админке
         '''
         return self.name
-    
+
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
@@ -91,7 +91,7 @@ class Tag(models.Model):
         Для правильного отображения в админке
         '''
         return self.name
-    
+
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'

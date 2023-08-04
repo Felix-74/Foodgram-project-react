@@ -1,5 +1,6 @@
 from typing import NamedTuple
 
+
 class MethodConst(NamedTuple):
     '''
     Константы методов запросов
