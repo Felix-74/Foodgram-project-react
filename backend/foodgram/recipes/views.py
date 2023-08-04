@@ -94,10 +94,9 @@ class ShopCartAPIView(APIView):
 
     def post(self, request, id):
         serializer = ShopCartSerializer(
-                data=dict(user=request.user.id,
-                    recipe=id
-                    ),
-                context=dict(request=request)
+            data=dict(user=request.user.id,
+                      recipe=id),
+            context=dict(request=request)
         )
         if serializer.is_valid():
             serializer.save()

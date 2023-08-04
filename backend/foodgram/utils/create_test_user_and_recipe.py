@@ -68,9 +68,7 @@ class CreateTestData:
             )
             ingredients = (
                 dict(id=randint(1, 1000),
-                    amount=randint(1, 100)
-                ),
-            )
+                     amount=randint(1, 100)), )
             tags = [id_ for id_ in range(randint(1, 3), 4)]
             SerializerMethods().add_ingredients(ingredients, recipe)
             TagRecipe.objects.bulk_create(
