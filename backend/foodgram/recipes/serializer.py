@@ -104,7 +104,6 @@ class RecipeSerializer(ModelSerializer):
         ).data
 
     def get_is_in_shopping_cart(self, obj):
-        print('serialize')
         return SerializerMethods().check_in_shopping_cart(self.context, obj)
 
     def get_is_favorited(self, obj):
