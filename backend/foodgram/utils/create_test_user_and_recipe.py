@@ -74,18 +74,15 @@ class CreateTestData:
         """
         for num in range(1, 60):
             recipe = Recipe.objects.create(
-                    author_id=randint(1, 3),
-                    name=f'Рецепт {num}',
-                    text=f'Текст рецепта {num}',
-                    time_cook=randint(1, 150),
-                    image=f'recipes/images/data/{randint(1, 11)}.jpg'
-                )
+                author_id=randint(1, 3),
+                name=f'Рецепт {num}',
+                text=f'Текст рецепта {num}',
+                time_cook=randint(1, 150),
+                image=f'recipes/images/data/{randint(1, 11)}.jpg'
+            )
             ingredients = (
-                dict(
-                    id=randint(1, 1000),
-                    amount=randint(1, 100)
-                    ),
-                )
+                dict(id=randint(1, 1000),
+                     amount=randint(1, 100)), )
             tags = [id_ for id_ in range(randint(1, 3), 4)]
             SerializerMethods().add_ingredients(ingredients, recipe)
             TagRecipe.objects.bulk_create(

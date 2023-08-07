@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-#from utils.load_ingredient import load_to_db
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,13 +27,12 @@ SECRET_KEY = os.getenv("DJ_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['*', ]
 AUTH_USER_MODEL = 'users.User'
 AUTH_TOKEN_MODEL = 'djoser.Token'
 # Application definition
 
 INSTALLED_APPS = [
-    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -166,8 +164,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    'DEFAULT_PAGINATION_CLASS': 'utils.paginations.PaginationFoodgram', #'rest_framework.pagination.LimitOffsetPagination',
-    #'PAGE_SIZE': 6
+    'DEFAULT_PAGINATION_CLASS': 'utils.paginations.PaginationFoodgram'
 }
 
 STATIC_URL = '/static/'

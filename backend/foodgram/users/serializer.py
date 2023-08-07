@@ -101,7 +101,7 @@ class CheckSubscribeSerializer(ModelSerializer):
             SerializerMethods().paginator(request, data),
             many=True,
             context=dict(request=request)
-            ).data
+        ).data
 
     def get_recipes_count(self, obj):
         return len(Recipe.objects.filter(author=obj))
