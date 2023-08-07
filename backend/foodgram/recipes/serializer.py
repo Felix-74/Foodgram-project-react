@@ -116,7 +116,8 @@ class CreateIngredientRecipe(ModelSerializer):
     """
 
     id = IntegerField()
-    amount = IntegerField(max_value=IntConst.MAX_SMALL, min_value=IntConst.MIN_SMALL)
+    amount = IntegerField(max_value=IntConst.MAX_SMALL,
+                          min_value=IntConst.MIN_SMALL)
 
     class Meta:
         model = IngredientRecipe
@@ -132,7 +133,9 @@ class CreateRecipeSerializer(ModelSerializer):
     image = Base64ImageField()
     author = DjoserUserSerializer(read_only=True)
     ingredients = CreateIngredientRecipe(many=True)
-    cooking_time = IntegerField(source='time_cook', max_value=IntConst.MAX_SMALL, min_value=IntConst.MIN_SMALL)
+    cooking_time = IntegerField(source='time_cook',
+                                max_value=IntConst.MAX_SMALL,
+                                min_value=IntConst.MIN_SMALL)
 
     class Meta:
         model = Recipe

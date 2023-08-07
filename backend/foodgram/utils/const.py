@@ -12,6 +12,7 @@ class MethodConst(NamedTuple):
     PUT = 'PUT'
     PATCH = 'PATCH'
 
+
 class IntConst(NamedTuple):
     """
     Константы инт
