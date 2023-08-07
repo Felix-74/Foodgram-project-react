@@ -6,10 +6,10 @@ from recipes.models import (Ingredient, IngredientRecipe,
 
 class SerializerMethods:
 
-    '''
+    """
     Будет использоваться в нескольких сериализаторах,
     что бы не нарушать DRY, вынес в utils
-    '''
+    """
 
     def paginator(self, request, recipes):
         limit = request.query_params.get('recipes_limit')
@@ -19,34 +19,27 @@ class SerializerMethods:
 
     def check_is_user(self, context):
         request = context.get('request', None)
-        if request and request.user.is_anonymous:
-            return False
-        return True
+        return bool(request and not request.user.is_anonymous)
 
     def check_request_context(self, context):
-        if context.get('request', False):
-            return False
-        return True
+        return not context.get('request', False)
 
     def check_is_favorited(self, context, obj):
         if self.check_is_user(context):
-            return Favorite.objects.filter(
-                user=context['request'].user, recipe_id=obj.id
-            ).exists()
+            user=context['request'].user
+            return bool(user.favorite.filter(recipe_id=obj.id))
         return False
 
     def check_is_subscribed(self, context, obj):
         if self.check_is_user(context):
-            return Subscription.objects.filter(
-                user_id=context['request'].user.id, author_id=obj.id
-            ).exists()
+            user=context['request'].user
+            return bool(user.follow.filter(author_id=obj.id))
         return False
 
     def check_in_shopping_cart(self, context, obj):
         if self.check_is_user(context):
-            return ShopCart.objects.filter(
-                user=context['request'].user, recipe_id=obj.id
-            ).exists()
+            user=context['request'].user
+            return bool(user.shop_cart.filter(recipe_id=obj.id))
         return False
 
     def add_ingredients(self, data_ingredient, recipe):

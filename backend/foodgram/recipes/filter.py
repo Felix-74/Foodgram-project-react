@@ -7,10 +7,10 @@ from recipes.models import Recipe, Tag
 
 
 class FilterRecipe(FilterSet):
-    '''
+    """
     Фильтра рецептов
     https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html
-    '''
+    """
 
     is_favorited = BooleanFilter(method='filter_is_favorited')
     is_in_shopping_cart = BooleanFilter(
@@ -27,24 +27,24 @@ class FilterRecipe(FilterSet):
         fields = ("shopping_cart", "favorite", "tags", "author")
 
     def filter_is_favorited(self, queryset, _, value):
-        '''
+        """
         Фильтрация queryset'a избранного
-        '''
+        """
         if not value:
             return queryset
         return queryset.filter(favorite__user=self.request.user)
 
     def filter_shopping_cart(self, queryset, _, value):
-        '''
+        """
         Фильтрация корзины
-        '''
+        """
         if not value:
             return queryset
         return queryset.filter(shopping_cart__user=self.request.user)
 
 
 class FilterIngredient(SearchFilter):
-    '''
+    """
     Фильтр ингредиентов по имени
-    '''
+    """
     search_param = 'name'

@@ -1,8 +1,12 @@
-from django.contrib.admin import ModelAdmin, site
+from django.contrib.admin import ModelAdmin, site, TabularInline
 from recipes.models import Recipe, Ingredient, Tag, Favorite
 from users.models import User, Subscription
 from django.contrib.auth.models import Group
 
+
+class IngredientInLine(TabularInline):
+    model = Recipe.ingredients.through
+    min_num = 1
 
 class UserAdmin(ModelAdmin):
 
@@ -11,9 +15,9 @@ class UserAdmin(ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name')
 
     def save_model(self, request, obj, form, change):
-        '''
+        """
         Правильно захеширует пароль при его смене через админку
-        '''
+        """
         obj.set_password(form.cleaned_data('password'))
         obj.save()
 
@@ -42,11 +46,12 @@ class RecipeAdmin(ModelAdmin):
     list_display = ('id', 'name', 'author', 'in_favorites')
     search_fields = ('name', 'author__username')
     list_filter = ('tags__name', 'author__username', 'name')
+    inlines = (IngredientInLine, )
 
     def in_favorites(self, obj):
-        '''
+        """
         Количество добавлений в избранное рецепта
-        '''
+        """
         return len(Favorite.objects.filter(recipe=obj))
 
 

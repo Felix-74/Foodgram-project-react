@@ -11,26 +11,25 @@ from django_filters.rest_framework import DjangoFilterBackend
 from recipes.filter import FilterIngredient, FilterRecipe
 from utils.const import MethodConst
 from utils.get_load import dowload_ingredients
-from recipes.models import (Favorite, Ingredient, Recipe,
-                            ShopCart, Tag)
+from recipes.models import Ingredient, Recipe, Tag
 from recipes.serializer import (CreateRecipeSerializer, FavoriteSerializer,
                                 IngredientsSerializer, RecipeSerializer,
                                 ShopCartSerializer, TagsSerializer)
 
 
 class TagViewSet(ModelViewSet):
-    '''
+    """
     Теги
-    '''
+    """
     queryset = Tag.objects.all()
     serializer_class = TagsSerializer
     pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
-    '''
+    """
     CRUD рецептов
-    '''
+    """
 
     permission_classes = (IsAuthenticatedOrReadOnly, )
     queryset = Recipe.objects.all()
@@ -38,24 +37,24 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = FilterRecipe
 
     def get_serializer_class(self):
-        '''
+        """
         Выбираем сериализатор в зависимости от типа
         запроса
-        '''
+        """
         if self.request.method == MethodConst.GET:
             return RecipeSerializer
         return CreateRecipeSerializer
 
 
 class FavoriteAPIView(APIView):
-    '''
+    """
     CRUD избранного
-    '''
+    """
 
     permission_classes = (IsAuthenticated, )
 
     def delete(self, request, id):
-        Favorite.objects.filter(user=request.user, recipe_id=id).delete()
+        self.request.user.favorite.filter(recipe_id=id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, id):
@@ -63,20 +62,16 @@ class FavoriteAPIView(APIView):
             data=dict(user=request.user.id, recipe=id),
             context=dict(request=request)
         )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(
-            dict(errors='Рецепт уже в избранном'),
-            status=status.HTTP_400_BAD_REQUEST
-        )
+            serializer.data, status=status.HTTP_201_CREATED)
 
 
 class IngredientViewSet(ModelViewSet):
-    '''
+    """
     Ингредиенты
-    '''
+    """
 
     pagination_class = None
     serializer_class = IngredientsSerializer
@@ -86,9 +81,9 @@ class IngredientViewSet(ModelViewSet):
 
 
 class ShopCartAPIView(APIView):
-    '''
+    """
     CRUD корзины
-    '''
+    """
 
     permission_classes = (IsAuthenticated, )
 
@@ -98,13 +93,12 @@ class ShopCartAPIView(APIView):
                       recipe=id),
             context=dict(request=request)
         )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
-        ShopCart.objects.filter(user=request.user, recipe_id=id).delete()
+        self.request.user.shop_cart.filter(recipe_id=id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
