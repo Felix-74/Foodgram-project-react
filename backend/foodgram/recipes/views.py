@@ -4,15 +4,13 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 
 from recipes.filter import FilterIngredient, FilterRecipe
 from utils.const import MethodConst
 from utils.get_load import dowload_ingredients
-from recipes.models import (Favorite, Ingredient, Recipe,
-                            ShopCart, Tag)
+from recipes.models import Ingredient, Recipe, Tag
 from recipes.serializer import (CreateRecipeSerializer, FavoriteSerializer,
                                 IngredientsSerializer, RecipeSerializer,
                                 ShopCartSerializer, TagsSerializer)
