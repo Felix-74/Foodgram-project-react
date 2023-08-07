@@ -8,6 +8,7 @@ class IngredientInLine(TabularInline):
     model = Recipe.ingredients.through
     min_num = 1
 
+
 class UserAdmin(ModelAdmin):
 
     search_fields = ('username', 'email')

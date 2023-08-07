@@ -1,5 +1,3 @@
-from recipes.models import Favorite, ShopCart
-from users.models import Subscription
 from recipes.models import (Ingredient, IngredientRecipe,
                             TagRecipe)
 
@@ -26,19 +24,19 @@ class SerializerMethods:
 
     def check_is_favorited(self, context, obj):
         if self.check_is_user(context):
-            user=context['request'].user
+            user = context['request'].user
             return bool(user.favorite.filter(recipe_id=obj.id))
         return False
 
     def check_is_subscribed(self, context, obj):
         if self.check_is_user(context):
-            user=context['request'].user
+            user = context['request'].user
             return bool(user.follow.filter(author_id=obj.id))
         return False
 
     def check_in_shopping_cart(self, context, obj):
         if self.check_is_user(context):
-            user=context['request'].user
+            user = context['request'].user
             return bool(user.shop_cart.filter(recipe_id=obj.id))
         return False
 
