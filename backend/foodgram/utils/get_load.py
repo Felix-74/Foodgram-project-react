@@ -2,9 +2,9 @@ from recipes.models import IngredientRecipe
 
 
 def dowload_ingredients(request):
-    '''
+    """
     Собираем ингредиенты из покупок
-    '''
+    """
     ingredients = IngredientRecipe.objects.filter(
         recipe__shopping_cart__user=request.user
     ).values(

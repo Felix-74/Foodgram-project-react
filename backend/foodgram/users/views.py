@@ -4,14 +4,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
+from django.shortcuts import get_object_or_404
+
 from users.models import Subscription, User
 from users.serializer import CheckSubscribeSerializer, SubscribeSerializer
 
 
 class SubscribeAPIView(APIView):
-    '''
+    """
     CRUD подписок
-    '''
+    """
 
     permission_classes = (IsAuthenticated, )
 
@@ -20,21 +22,19 @@ class SubscribeAPIView(APIView):
             data=dict(user=request.user.id, author=id),
             context=dict(request=request)
         )
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, id):
-        Subscription.objects.filter(user=request.user,
-                                    author_id=id).delete()
+        self.request.user.follow.filter(author_id=id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CheckSubscribeAPIView(ListAPIView):
-    '''
+    """
     Показать подписки
-    '''
+    """
 
     permission_classes = (IsAuthenticated, )
 

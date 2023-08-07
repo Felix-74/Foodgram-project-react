@@ -14,10 +14,10 @@ USER_AUTHOR_FIELDS = ('user', 'author')
 
 
 class UserSerializer(DjoserUserSerializer):
-    '''
+    """
     Сериализатор юзера
     https://djoser.readthedocs.io/en/latest/settings.html#serializers
-    '''
+    """
 
     is_subscribed = SerializerMethodField(read_only=True)
 
@@ -33,18 +33,18 @@ class UserSerializer(DjoserUserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        '''
+        """
         Узнаем статус подписки
-        '''
+        """
 
         return SerializerMethods().check_is_subscribed(self.context, obj)
 
 
 class UserRegSerializer(UserCreateSerializer):
-    '''
+    """
     Cериализатор регистрации
     https://djoser.readthedocs.io/en/latest/settings.html#serializers
-    '''
+    """
 
     class Meta:
         model = User
@@ -58,9 +58,9 @@ class UserRegSerializer(UserCreateSerializer):
 
 
 class CheckSubscribeSerializer(ModelSerializer):
-    '''
+    """
     Просмотр подписок юзера
-    '''
+    """
 
     recipes = SerializerMethodField()
     is_subscribed = SerializerMethodField()
@@ -87,8 +87,11 @@ class CheckSubscribeSerializer(ModelSerializer):
 
     def get_is_subscribed(self, obj):
         if user := self.check_user(self.context):
-            return Subscription.objects.filter(
-                user=user, author=obj).exists()
+            #print(obj.user.filter(user=user))
+            #if data['recipe'].shopping_cart.filter(user_id=data['user'])
+            #return Subscription.objects.filter(
+            #    user=user, author=obj).exists()
+            return bool(obj.user.filter(user=user))
         return False
 
     def get_recipes(self, obj):
@@ -105,9 +108,9 @@ class CheckSubscribeSerializer(ModelSerializer):
 
 
 class SubscribeSerializer(ModelSerializer):
-    '''
+    """
     Подписки
-    '''
+    """
 
     class Meta:
         model = Subscription
@@ -120,9 +123,7 @@ class SubscribeSerializer(ModelSerializer):
         ]
 
     def validate(self, data):
-        print('validator rabotaet')
         if data['user'] != data['author']:
-            print(data)
             return data
         raise ValidationError(dict(error='Нельзя подписаться на самого себя'))
 

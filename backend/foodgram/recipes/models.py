@@ -1,14 +1,17 @@
+from typing import Collection, Optional
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import UniqueConstraint
+from django.core.exceptions import ValidationError
+from utils.validators import min_max_small_int
 
 User = get_user_model()
 
 
 class Recipe(models.Model):
-    '''
+    """
     Рецепт
-    '''
+    """
 
     name = models.CharField('Рецепт', max_length=140)
     text = models.TextField(
@@ -31,8 +34,8 @@ class Recipe(models.Model):
         through='IngredientRecipe',
         verbose_name='Ингредиенты'
     )
-    time_cook = models.PositiveIntegerField(
-        verbose_name='Время готовки',
+    time_cook = models.PositiveSmallIntegerField(
+        verbose_name='Время готовки'
     )
     image = models.ImageField(
         'Картинка',
@@ -43,22 +46,30 @@ class Recipe(models.Model):
         auto_now_add=True,
     )
 
-    def __str__(self):
-        '''
-        Для правильного отображения в админке
-        '''
-        return self.name
-
     class Meta:
         ordering = ('-date_add',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
+    def __str__(self):
+        """
+        Для правильного отображения в админке
+        """
+        return self.name
+
+    def clean(self):
+        if min_max_small_int(self.time_cook):
+            raise ValidationError("Не верное значение времени готовки")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
 
 class Ingredient(models.Model):
-    '''
+    """
     Ингредиент
-    '''
+    """
 
     measurement_unit = models.CharField('Тип измерения', max_length=140)
     name = models.CharField(
@@ -66,41 +77,41 @@ class Ingredient(models.Model):
         max_length=140,
     )
 
-    def __str__(self):
-        '''
-        Для правильного отображения в админке
-        '''
-        return self.name
-
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
+    def __str__(self):
+        """
+        Для правильного отображения в админке
+        """
+        return self.name
+
 
 class Tag(models.Model):
-    '''
+    """
     Тег
-    '''
+    """
 
     slug = models.SlugField('Слаг', unique=True, max_length=140)
     name = models.CharField('Название тега', unique=True, max_length=140)
     color = models.CharField('HEX', unique=True, max_length=7)
 
-    def __str__(self):
-        '''
-        Для правильного отображения в админке
-        '''
-        return self.name
-
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
+    def __str__(self):
+        """
+        Для правильного отображения в админке
+        """
+        return self.name
+
 
 class Favorite(models.Model):
-    '''
+    """
     Избранное
-    '''
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -125,9 +136,9 @@ class Favorite(models.Model):
 
 
 class IngredientRecipe(models.Model):
-    '''
+    """
     Промежуточная модель таблицы ингредиента и рецепта
-    '''
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -139,7 +150,7 @@ class IngredientRecipe(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингредиент'
     )
-    amount = models.IntegerField('Количество')
+    amount = models.PositiveSmallIntegerField('Количество')
 
     class Meta:
         constraints = [
@@ -149,11 +160,19 @@ class IngredientRecipe(models.Model):
             )
         ]
 
+    def clean(self):
+        if min_max_small_int(self.amount):
+            raise ValidationError("Не верное значение кол-ва ингредиента")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
 
 class TagRecipe(models.Model):
-    '''
+    """
     Промежуточная модель таблицы тега и рецепта
-    '''
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -176,9 +195,9 @@ class TagRecipe(models.Model):
 
 
 class ShopCart(models.Model):
-    '''
+    """
     Корзина покупок
-    '''
+    """
 
     user = models.ForeignKey(
         User,

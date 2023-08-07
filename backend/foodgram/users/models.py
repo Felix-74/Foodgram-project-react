@@ -5,10 +5,10 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    '''
+    """
     Модель юзера
     https://docs.djangoproject.com/en/4.2/topics/auth/customizing/
-    '''
+    """
 
     username = models.CharField('username', max_length=254)
     last_name = models.CharField('Фамилия', max_length=254, blank=False)
@@ -24,9 +24,9 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
-    '''
+    """
     Модель подписки
-    '''
+    """
     user = models.ForeignKey(
         User,
         verbose_name='Фолловер',
@@ -45,6 +45,7 @@ class Subscription(models.Model):
         return f'{self.user} + {self.author}'
 
     class Meta:
+        ordering = ('-author_id', )
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [

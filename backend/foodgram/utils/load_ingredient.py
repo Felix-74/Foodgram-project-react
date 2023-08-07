@@ -10,9 +10,9 @@ TAG_DATA = (
 
 
 def load_to_db():
-    '''
+    """
     Загрузка данных в БД если она пуста
-    '''
+    """
     resp_ = {}
     if len(Tag.objects.all()) == 0:
         Tag.objects.bulk_create([
