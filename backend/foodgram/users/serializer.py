@@ -87,10 +87,6 @@ class CheckSubscribeSerializer(ModelSerializer):
 
     def get_is_subscribed(self, obj):
         if user := self.check_user(self.context):
-            #print(obj.user.filter(user=user))
-            #if data['recipe'].shopping_cart.filter(user_id=data['user'])
-            #return Subscription.objects.filter(
-            #    user=user, author=obj).exists()
             return bool(obj.user.filter(user=user))
         return False
 
