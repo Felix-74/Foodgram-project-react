@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -58,8 +59,8 @@ class FavoriteAPIView(APIView):
 
     def post(self, request, id):
         serializer = FavoriteSerializer(
-                data=dict(user=request.user.id, recipe=id),
-                context=dict(request=request)
+            data=dict(user=request.user.id, recipe=id),
+            context=dict(request=request)
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -88,11 +89,9 @@ class ShopCartAPIView(APIView):
 
     def post(self, request, id):
         serializer = ShopCartSerializer(
-                data=dict(
-                    user=request.user.id,
-                    recipe=id
-                ),
-                context=dict(request=request)
+            data=dict(user=request.user.id,
+                      recipe=id),
+            context=dict(request=request)
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
