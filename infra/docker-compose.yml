@@ -25,9 +25,7 @@ services:
 
   web_backend:
     container_name: web_backend
-    build:
-      context: ../backend/foodgram
-      dockerfile: Dockerfile
+    image: felix74/my_food:v1
     ports:
       - 8000:8000
     restart:
