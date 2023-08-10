@@ -1,5 +1,6 @@
-from django.contrib.auth import get_user_model
 from random import randint
+from django.contrib.auth import get_user_model
+
 from users.models import User
 from utils.method_serializer import SerializerMethods
 from recipes.models import TagRecipe, Recipe

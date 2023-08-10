@@ -17,7 +17,7 @@ class SerializerMethods:
 
     def check_is_user(self, context):
         request = context.get('request', None)
-        return bool(request and not request.user.is_anonymous)
+        return request and not request.user.is_anonymous
 
     def check_request_context(self, context):
         return not context.get('request', False)
@@ -25,19 +25,19 @@ class SerializerMethods:
     def check_is_favorited(self, context, obj):
         if self.check_is_user(context):
             user = context['request'].user
-            return bool(user.favorite.filter(recipe_id=obj.id))
+            return user.favorite.filter(recipe_id=obj.id).exists()
         return False
 
     def check_is_subscribed(self, context, obj):
         if self.check_is_user(context):
             user = context['request'].user
-            return bool(user.follow.filter(author_id=obj.id))
+            return user.follow.filter(author_id=obj.id).exists()
         return False
 
     def check_in_shopping_cart(self, context, obj):
         if self.check_is_user(context):
             user = context['request'].user
-            return bool(user.shop_cart.filter(recipe_id=obj.id))
+            return user.shop_cart.filter(recipe_id=obj.id).exists()
         return False
 
     def add_ingredients(self, data_ingredient, recipe):

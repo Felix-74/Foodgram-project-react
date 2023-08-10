@@ -1,14 +1,14 @@
-from rest_framework.serializers import SerializerMethodField
-from users.models import User, Subscription
+from rest_framework.serializers import (SerializerMethodField,
+                                        ModelSerializer,
+                                        ValidationError)
+from rest_framework.validators import UniqueTogetherValidator
 from djoser.serializers import (UserCreateSerializer,
                                 UserSerializer as DjoserUserSerializer)
-from utils.method_serializer import SerializerMethods
-from rest_framework.serializers import ModelSerializer
-from rest_framework.validators import UniqueTogetherValidator
+
+from users.models import User, Subscription
 from recipes.models import Recipe
 from recipes.serializer import ShowFavoriteSerializer
-from rest_framework.serializers import ValidationError
-
+from utils.method_serializer import SerializerMethods
 
 USER_AUTHOR_FIELDS = ('user', 'author')
 
