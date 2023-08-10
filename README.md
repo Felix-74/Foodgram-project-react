@@ -28,7 +28,7 @@
 |Пользователь  |```2@2.ru```  | ```usr_test_password```|
 |Пользователь  |```3@3.ru```  | ```usr_test_password```|
 
-#Пример обращения к API:
+#### Пример обращения к API:
 ![Image alt](https://github.com/Felix-74/foodgram-project-react/blob/master/example_img/get_recipes_api.png)
 
 #### Используемые технологии:
