@@ -215,7 +215,7 @@ class FavoriteSerializer(ModelSerializer):
 
     def validate(self, data):
         if data['recipe'].favorite.filter(user_id=data['user']):
-            raise ValidationError("Уже есть такая подписка!")
+            raise ValidationError('Уже есть такая подписка!')
         return data
 
     def to_representation(self, data):
@@ -236,7 +236,7 @@ class ShopCartSerializer(ModelSerializer):
 
     def validate(self, data):
         if data['recipe'].shopping_cart.filter(user_id=data['user']):
-            raise ValidationError("Предмет уже добавлен!!")
+            raise ValidationError('Предмет уже добавлен!!')
         return data
 
     def to_representation(self, data):

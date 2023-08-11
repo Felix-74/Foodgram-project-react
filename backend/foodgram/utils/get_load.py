@@ -21,6 +21,6 @@ def dowload_ingredients(request):
             data[name]['amount'] += amount
     data_list = []
     for obj in data.items():
-        objs = f'{obj[1]["name"]} - {obj[1]["amount"]} - {obj[1]["unit"]}'
+        objs = f'{obj[1]['name']} - {obj[1]['amount']} - {obj[1]['unit']}'
         data_list.append(objs)
     return data_list

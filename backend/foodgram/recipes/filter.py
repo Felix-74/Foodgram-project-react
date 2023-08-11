@@ -24,7 +24,7 @@ class FilterRecipe(FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ("shopping_cart", "favorite", "tags", "author")
+        fields = ('shopping_cart', 'favorite', 'tags', 'author')
 
     def filter_is_favorited(self, queryset, _, value):
         """

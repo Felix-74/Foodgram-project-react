@@ -58,7 +58,7 @@ class Recipe(models.Model):
 
     def clean(self):
         if min_max_small_int(self.time_cook):
-            raise ValidationError("Не верное значение времени готовки")
+            raise ValidationError('Не верное значение времени готовки')
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -161,7 +161,7 @@ class IngredientRecipe(models.Model):
 
     def clean(self):
         if min_max_small_int(self.amount):
-            raise ValidationError("Не верное значение кол-ва ингредиента")
+            raise ValidationError('Не верное значение кол-ва ингредиента')
 
     def save(self, *args, **kwargs):
         self.full_clean()
